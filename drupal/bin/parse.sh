@@ -24,7 +24,6 @@ cat boites_francaises.list | while read boite ; do
 	userid=$(echo $boite | sed 's/.*node.//' | sed 's/\///')
 	commits=0
 	devs=0
-	echo -n $nom",https://www.drupal.org/node/"$userid","$nb","$issues
 	for i in 0 1 2 3 4 ; do
 		download $boite"/users?page="$i > /tmp/$$.html
 		grep '<h2><a href="' /tmp/$$.html | sed 's|.*<h2><a href="|https://www.drupal.org/|' | sed 's|".*||' | while read userurl ; do 
@@ -36,7 +35,9 @@ cat boites_francaises.list | while read boite ; do
 		echo $commits","$devs > /tmp/$$.txt
 		done 
 	done
-	echo ","$(cat /tmp/$$.txt)
+	echo $nom",https://www.drupal.org/node/"$userid","$nb","$issues","$(cat /tmp/$$.txt) >> /tmp/$$.csv
 
 done
-rm /tmp/$$.html /tmp/$$.txt
+sort -t , -k 5,5 -r -n /tmp/$$.csv
+rm /tmp/$$.html /tmp/$$.txt /tmp/$$.csv
+
