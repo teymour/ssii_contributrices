@@ -24,8 +24,11 @@ function moreauthor {
 	mycache=$CACHE"/author_"$(echo $author | md5sum | sed 's/ .*//')
 	if ! test -e $mycache; then
 		commit_url=$(echo $github_url | sed 's|/github.com/|/api.github.com/repos/|' | sed 's|$|/commits/'$commit'|')
-		author_url=$(download $commit_url | grep -A 10 "author" | grep '"url":' | sed 's/.*"url": "//' | sed 's/".*//' | head -n 1)
-		author_company=$(download $author_url | grep '"company": "' | sed 's/.*"company": "//' | sed 's/".*//')
+		author_url=$(download $commit_url | grep -A 10 '"author"' | head -n 10 | grep '"url":' | sed 's/.*"url": "//' | sed 's/".*//' | head -n 1)
+		author_company=""
+		if test "$author_url" ; then 
+			author_company=$(download $author_url | grep '"company": "' | sed 's/.*"company": "//' | sed 's/".*//')
+		fi
 		echo $author_url";"$author_company > $mycache
 	fi
 	if test -s $mycahe ; then
