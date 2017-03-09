@@ -7,7 +7,7 @@ github_url=$1
 
 rm -rf /tmp/exportgit
 mkdir -p /tmp/exportgit
-git clone --bare $github_url /tmp/exportgit
+git clone --bare $github_url /tmp/exportgit 1>&2
 
 download() {
 	md5=$(echo $1 | md5sum | sed 's/ .*//')
@@ -31,10 +31,11 @@ function moreauthor {
 		fi
 		echo $author_url";"$author_company > $mycache
 	fi
+	touch $mycache
 	if test -s $mycahe ; then
 		cat $mycache
 	else
-		echo 
+		echo ";"
 	fi
 
 }
