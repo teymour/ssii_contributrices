@@ -26,8 +26,13 @@ function moreauthor {
 		commit_url=$(echo $github_url | sed 's|/github.com/|/api.github.com/repos/|' | sed 's|$|/commits/'$commit'|')
 		author_url=$(download $commit_url | grep -A 10 "author" | grep '"url":' | sed 's/.*"url": "//' | sed 's/".*//' | head -n 1)
 		author_company=$(download $author_url | grep '"company": "' | sed 's/.*"company": "//' | sed 's/".*//')
+		echo $author_url";"$author_company > $mycache
 	fi
-	cat $mycache
+	if test -s $mycahe ; then
+		cat $mycache
+	else
+		echo 
+	fi
 
 }
 
